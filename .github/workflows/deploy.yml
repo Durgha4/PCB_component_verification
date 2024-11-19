@@ -51,7 +51,7 @@ jobs:
       # Step 4: Build and push Docker image to AWS ECR
       - name: Build and Push Docker image
         run: |
-          docker build -t traffic-detection .
+          docker build -t pcb_detect .
           docker tag traffic-detection:latest 241533114642.dkr.ecr.us-east-1.amazonaws.com/pcb_detect:latest
           docker push 241533114642.dkr.ecr.us-east-1.amazonaws.com/pcb_detect:latest
 
@@ -84,7 +84,7 @@ jobs:
       - name: Deploy to EC2 instance
         run: |
           # Connect to EC2 and perform deployment
-          ssh -o StrictHostKeyChecking=no ubuntu@13.200.207.243 << EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@3.86.163.164 << EOF
             # Stop and remove any running container on port 8080
             CONTAINER_ID=$(docker ps -q -f "ancestor=241533114642.dkr.ecr.us-east-1.amazonaws.com/pcb_detect:latest")
             if [ ! -z "$CONTAINER_ID" ]; then
@@ -112,6 +112,6 @@ jobs:
       # Optional: Check the running container logs (for debugging purposes)
       - name: Check Docker container logs
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@13.200.207.243 << EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@3.86.163.164 << EOF
             docker ps
           EOF
